@@ -1,0 +1,109 @@
+﻿<Window x:Class="TestTask_Сurrencies.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:TestTask_Сurrencies"
+        mc:Ignorable="d"
+        Title="Котировки" Height="500" Width="900" FontSize="16" MinWidth="800" MinHeight="500">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="0.7*"/>
+            <RowDefinition Height="2*"/>
+            <RowDefinition Height="2*"/>
+            <RowDefinition Height="1.3*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="1.3*"/>
+        </Grid.ColumnDefinitions>
+        <Button Command="{Binding UpdateCommand}" Grid.Row="0" Content="Обновить" HorizontalAlignment="Left" Margin="20,20,0,0" VerticalAlignment="Top" Width="95"/>
+        <Button Command="{Binding LoadCommand}" Grid.Row="0" Content="Загрузить" HorizontalAlignment="Left" Margin="125,20,0,0" VerticalAlignment="Top" Width="95"/>
+        <TextBlock Grid.Row="1" HorizontalAlignment="Left" Margin="20,10,0,0" TextWrapping="Wrap" Text="Коды валют" VerticalAlignment="Top"/>
+        <TreeView Grid.Row="1" Grid.RowSpan="2" HorizontalAlignment="Stretch" Margin="20,40,10,10" VerticalAlignment="Stretch"
+                  ItemsSource="{Binding CurrencyCodes}">
+            <TreeView.ItemTemplate>
+                <HierarchicalDataTemplate ItemsSource="{Binding Path=CurrencyCodes}">
+                    <TreeViewItem Header="{Binding Path=Name}">
+                        <GroupBox Header="Код валюты :" BorderThickness="2">
+                            <TextBlock Text="{Binding Path=Id}" />
+                        </GroupBox>
+                        <GroupBox Header="Номинал :" BorderThickness="2">
+                            <TextBlock Text="{Binding Path=Nominal}" />
+                        </GroupBox>
+                        <GroupBox Header="Цифровой код ISO :" BorderThickness="2">
+                            <TextBlock Text="{Binding Path=ISO_Num_Code}" />
+                        </GroupBox>
+                        <GroupBox Header="3-х буквенный код ISO :" BorderThickness="2">
+                            <TextBlock Text="{Binding Path=ISO_Char_Code}" />
+                        </GroupBox>
+                    </TreeViewItem>
+                </HierarchicalDataTemplate>
+            </TreeView.ItemTemplate>
+        </TreeView>
+        <TextBlock Grid.Column="1" Grid.Row="1" HorizontalAlignment="Left" Margin="20,10,0,0" TextWrapping="Wrap" Text="Курсы валют ЦБ на сегодня" VerticalAlignment="Top"/>
+        <TreeView Grid.Column="1" Grid.Row="1" HorizontalAlignment="Stretch" Margin="20,40,20,10" VerticalAlignment="Stretch"
+                  ItemsSource="{Binding CurrencyRates}">
+            <TreeView.ItemTemplate>
+                <HierarchicalDataTemplate ItemsSource="{Binding Path=CurrencyRates}">
+                    <TreeViewItem Header="{Binding Path=Title}">
+                        <GroupBox Header="Код валюты :" BorderThickness="2">
+                            <TextBlock Text="{Binding Path=Id}" />
+                        </GroupBox>
+                        <GroupBox Header="Номинал :" BorderThickness="2">
+                            <TextBlock Text="{Binding Path=Nominal}" />
+                        </GroupBox>
+                        <GroupBox Header="Цифровой код ISO :" BorderThickness="2">
+                            <TextBlock Text="{Binding Path=NumCode}" />
+                        </GroupBox>
+                        <GroupBox Header="3-х буквенный код ISO :" BorderThickness="2">
+                            <TextBlock Text="{Binding Path=CharCode}" />
+                        </GroupBox>
+                    </TreeViewItem>
+                </HierarchicalDataTemplate>
+            </TreeView.ItemTemplate>
+        </TreeView>
+        <TextBlock Grid.Column="1" Grid.Row="2" HorizontalAlignment="Left" Margin="20,10,0,0" TextWrapping="Wrap" Text="Конвертировать" VerticalAlignment="Top"/>
+        <ComboBox Grid.Column="1" Grid.Row="2" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="20,40,0,0"
+                  ItemsSource="{Binding CurrencyRates}" SelectedItem="{Binding SelectedRateFirst}" MaxWidth="250">
+            <ComboBox.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding Path=Name}"></TextBlock>
+                </DataTemplate>
+            </ComboBox.ItemTemplate>
+        </ComboBox>
+        <TextBox Text="{Binding AmountForSelectedRateFirst, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1" Grid.Row="2" HorizontalAlignment="Stretch" VerticalAlignment="Top" Margin="260,40,20,0"/>
+        <ComboBox Grid.Column="1" Grid.Row="2" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="20,90,0,0"
+                  ItemsSource="{Binding CurrencyRates}" SelectedItem="{Binding SelectedRateSecond}" MaxWidth="250">
+            <ComboBox.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding Path=Name}"></TextBlock>
+                </DataTemplate>
+            </ComboBox.ItemTemplate>
+        </ComboBox>
+        <TextBox Text="{Binding AmountForSelectedRateSecond, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1" Grid.Row="2" HorizontalAlignment="Stretch" VerticalAlignment="Top" Margin="260,90,20,0"/>
+        <TextBox Text="{Binding Search, UpdateSourceTrigger=PropertyChanged}" Grid.Column="0" Grid.Row="3" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="20,0,120,0"/>
+        <Button Command="{Binding SearchCommand}" Content="Поиск" Grid.Column="0" Grid.Row="3" HorizontalAlignment="Right" Width="100" VerticalAlignment="Center" Margin="0,0,10,0"></Button>
+        <TreeView Grid.Column="1" Grid.Row="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="20,10,20,20"
+                 ItemsSource="{Binding SearchResults}">
+            <TreeView.ItemTemplate>
+                <HierarchicalDataTemplate ItemsSource="{Binding Path=SearchResults}">
+                    <TreeViewItem Header="{Binding Path=Title}">
+                        <GroupBox Header="Код валюты :" BorderThickness="2">
+                            <TextBlock Text="{Binding Path=Id}" />
+                        </GroupBox>
+                        <GroupBox Header="Номинал :" BorderThickness="2">
+                            <TextBlock Text="{Binding Path=Nominal}" />
+                        </GroupBox>
+                        <GroupBox Header="Цифровой код ISO :" BorderThickness="2">
+                            <TextBlock Text="{Binding Path=NumCode}" />
+                        </GroupBox>
+                        <GroupBox Header="3-х буквенный код ISO :" BorderThickness="2">
+                            <TextBlock Text="{Binding Path=CharCode}" />
+                        </GroupBox>
+                    </TreeViewItem>
+                </HierarchicalDataTemplate>
+            </TreeView.ItemTemplate>
+        </TreeView>
+    </Grid>
+</Window>
